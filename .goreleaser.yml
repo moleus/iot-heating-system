@@ -1,0 +1,23 @@
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - binary: weather_fetcher
+    goos:
+      - linux
+    goarch:
+      - amd64
+
+kos:
+  - id: weather_fetcher
+    repository: ghcr.io/moleus/iot-heating-system
+    main: ./cmd/weather_fetcher
+    tags:
+      - '{{.Version}}'
+      - latest
+    base_import_paths: true
+    bare: false
+    preserve_import_paths: false
+    platforms:
+      - "linux/amd64"

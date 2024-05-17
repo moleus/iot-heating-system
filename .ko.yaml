@@ -1,4 +1,0 @@
----
-builds:
-  - id: weather_fetcher
-    # main: ./cmd/weather_fetcher/main.go

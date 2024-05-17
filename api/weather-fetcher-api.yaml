@@ -46,13 +46,16 @@ paths:
 components:
   schemas:
     DaysForecast:
-      type: array
-      items:
-        $ref: '#/components/schemas/DayForecast'
+      type: object
+      properties:
+        days:
+          type: array
+          items:
+            $ref: '#/components/schemas/DayForecast'
     DayForecast:
       type: object
       properties:
-        forecasts:
+        hours:
           type: array
           items:
             $ref: '#/components/schemas/HourForecast'

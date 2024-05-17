@@ -2,8 +2,13 @@ version: '3.7'
 
 services:
   weather-fetcher:
-    image: ghcr.io/moleus/iot-heating-system/weather-fetcher:latest
+    image: ghcr.io/moleus/iot-heating-system/weather_fetcher:latest
     env_file:
       - .env
     networks:
       - iot-heating-system
+    ports:
+      - "127.0.0.1:8080:8080"
+
+networks:
+  iot-heating-system:

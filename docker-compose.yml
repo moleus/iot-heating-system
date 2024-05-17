@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  weather-fetcher:
+    image: ghcr.io/moleus/iot-heating-system/weather-fetcher:latest
+    env_file:
+      - .env
+    networks:
+      - iot-heating-system

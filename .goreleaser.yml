@@ -5,6 +5,7 @@ before:
 builds:
   - id: weather_fetcher
     binary: weather_fetcher
+    main: ./cmd/weather_fetcher
     goos:
       - linux
     goarch:

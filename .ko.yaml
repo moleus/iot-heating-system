@@ -1,0 +1,4 @@
+---
+builds:
+  - id: weather-fetcher
+    main: ./cmd/weather-fetcher

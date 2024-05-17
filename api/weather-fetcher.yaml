@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  title: Weather fetcher
+  description: A relay between services and weather providers
+  version: 1.0.0
+servers:
+  - url: 'http://weather-fetcher'
+paths:
+  /weather:
+    get:
+      summary: Get weather forecast
+      description: Fetches weather forecast for the given coordinates for the specified number of days
+      parameters:
+        - in: query
+          name: lat
+          schema:
+            type: number
+            example: 40.7128
+          description: The latitude for which to fetch the weather forecast
+          required: true
+        - in: query
+          name: lon
+          schema:
+            type: number
+            example: -74.0060
+          description: The longitude for which to fetch the weather forecast
+          required: true
+        - in: query
+          name: days
+          schema:
+            type: integer
+            example: 5
+          description: The number of days to fetch the weather forecast for
+          required: true
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DaysForecast'
+        '400':
+          description: Bad request. User sent incorrect data.
+        '500':
+          description: Internal server error.
+components:
+  schemas:
+    DaysForecast:
+      type: array
+      items:
+        $ref: '#/components/schemas/DayForecast'
+    DayForecast:
+      type: object
+      properties:
+        forecasts:
+          type: array
+          items:
+            $ref: '#/components/schemas/HourForecast'
+    HourForecast:
+      type: object
+      properties:
+        time:
+          type: string
+          format: date-time
+        temperature:
+          type: number

@@ -1,8 +1,8 @@
-package: api
+package: main
 generate:
   gin-server: true
   strict-server: true
   models: true
-output: api.gen.go
+output: ../cmd/weather_fetcher/api.gen.go
 output-options:
   skip-prune: true

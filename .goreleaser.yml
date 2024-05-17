@@ -3,7 +3,8 @@ before:
     - go mod tidy
 
 builds:
-  - binary: weather_fetcher
+  - id: weather_fetcher
+    binary: weather_fetcher
     goos:
       - linux
     goarch:

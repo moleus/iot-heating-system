@@ -1,0 +1,62 @@
+openapi: 3.0.3
+info:
+  title: Fuel Analyzer API
+  version: 1.0.0
+servers:
+  - url: 'http://fuel-analyzer'
+paths:
+  /analyze:
+    get:
+      summary: Analyze fuel consumption
+      parameters:
+        - name: required_temp
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: outside_temp
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: efficiency
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: specific_heat_of_combustion_fuel
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: design_outside_temp
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+        - name: design_capacity
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fuel_consumption:
+                    type: number
+                    format: float
+        '400':
+          description: Invalid request parameters
+        '405':
+          description: Method not allowed

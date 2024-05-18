@@ -10,11 +10,47 @@ builds:
       - linux
     goarch:
       - amd64
+  - id: temperature_changer
+    binary: temperature_changer
+    main: ./cmd/temperature_changer
+    goos:
+      - linux
+    goarch:
+      - amd64
+  - id: pipes_master
+    binary: pipes_master
+    main: ./cmd/pipes_master
+    goos:
+      - linux
+    goarch:
+      - amd64
 
 kos:
   - id: weather_fetcher
     repository: ghcr.io/moleus/iot-heating-system
     main: ./cmd/weather_fetcher
+    tags:
+      - '{{.Version}}'
+      - latest
+    base_import_paths: true
+    bare: false
+    preserve_import_paths: false
+    platforms:
+      - "linux/amd64"
+  - id: temperature_changer
+    repository: ghcr.io/moleus/iot-heating-system
+    main: ./cmd/temperature_changer
+    tags:
+      - '{{.Version}}'
+      - latest
+    base_import_paths: true
+    bare: false
+    preserve_import_paths: false
+    platforms:
+      - "linux/amd64"
+  - id: pipes_master
+    repository: ghcr.io/moleus/iot-heating-system
+    main: ./cmd/pipes_master
     tags:
       - '{{.Version}}'
       - latest

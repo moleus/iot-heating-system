@@ -48,4 +48,4 @@ jobs:
           ko build --platform=linux/amd64 -B -t devel-${{ env.BRANCH_NAME }}
           ./cmd/weather_fetcher
           ./cmd/pipes_master
-          /cmd/temperature_changer
+          ./cmd/temperature_changer

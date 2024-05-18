@@ -1,5 +1,2 @@
 ###
-GET http://127.0.0.1:8080/weather?
-    lat=11.11&
-    lon=11.11&
-    days=1
+GET http://127.0.0.1:8080/weather?lat=11.11&lon=11.11&days=2

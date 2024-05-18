@@ -10,6 +10,16 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
 
+  pipes-master:
+    image: ghcr.io/moleus/iot-heating-system/pipes_master:latest
+    networks:
+      - iot-heating-system
+
+  temperature_changer:
+    image: ghcr.io/moleus/iot-heating-system/temperature_changer:latest
+    networks:
+      - iot-heating-system
+
   victoriametrics:
     image: victoriametrics/victoria-metrics:v1.100.1
     ports:

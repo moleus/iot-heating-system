@@ -19,6 +19,8 @@ services:
     image: ghcr.io/moleus/iot-heating-system/temperature_changer:latest
     networks:
       - iot-heating-system
+    depends_on:
+      - mosquitto
 
   fuel-analyzer:
     image: ghcr.io/moleus/iot-heating-system/fuel_analyzer:latest

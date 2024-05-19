@@ -15,8 +15,18 @@ services:
     networks:
       - iot-heating-system
 
-  temperature_changer:
+  temperature-changer:
     image: ghcr.io/moleus/iot-heating-system/temperature_changer:latest
+    networks:
+      - iot-heating-system
+
+  fuel-analyzer:
+    image: ghcr.io/moleus/iot-heating-system/fuel_analyzer:latest
+    networks:
+      - iot-heating-system
+
+  heater:
+    image: ghcr.io/moleus/iot-heating-system/heater:latest
     networks:
       - iot-heating-system
 

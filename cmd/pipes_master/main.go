@@ -17,8 +17,9 @@ const SpecificHeatOfWater = 4190
 
 func init() {
 	pflag.String("mqtt_broker", "tcp://mosquitto:1883", "MQTT broker to connect to")
-	pflag.String("mqtt_temperature_topic", "target/pipes/temperature", "Pipes temperature reading topic")
-	pflag.String("mqtt_pressure_topic", "target/pipes/pressure", "Pipes pressure writing topic")
+	pflag.String("mqtt_subscribe_temperature_topic", common.AirTemperatureTopic, "Pipes temperature reading topic")
+	pflag.String("mqtt_publish_pipes_temperature", common.PipesTemperatureTopic, "Pipes pressure writing topic")
+	pflag.String("mqtt_publish_pressure_topic", common.PipesPressureTopic, "Pipes pressure writing topic")
 
 	pflag.Parse()
 	_ = viper.BindPFlags(pflag.CommandLine)
@@ -37,7 +38,7 @@ func main() {
 	}
 
 	// Subscribe to the topic
-	token = mqttClient.Subscribe(viper.GetString("mqtt_temperature_topic"), 0, onTemperatureChange)
+	token = mqttClient.Subscribe(viper.GetString("mqtt_subscribe_temperature_topic"), 0, onTemperatureChange)
 	token.Wait()
 	if token.Error() != nil {
 		log.Fatalf("Failed to subscribe to topic: %v", token.Error())
@@ -48,26 +49,39 @@ func main() {
 }
 
 func onTemperatureChange(client mqtt.Client, msg mqtt.Message) {
-	var temperature common.MqttTargetPipesTemperature
-	err := json.Unmarshal(msg.Payload(), &temperature)
+	var airTemperature common.MqttTargetAirTemperature
+
+	err := json.Unmarshal(msg.Payload(), &airTemperature)
 	if err != nil {
 		log.Printf("Failed to unmarshal message: %v", err)
 		return
 	}
 
-	if temperature.InTemperature >= temperature.OutTemperature {
-		log.Printf("Warning: in temperature %f must not be greater to out temperature %f. Skipping", temperature.InTemperature, temperature.OutTemperature)
+	inTemperature, outTemperature := calculatePipesTemperature(airTemperature)
+
+	pipesTemperature := common.MqttTargetPipesTemperature{
+		InTemperature:  inTemperature,
+		OutTemperature: outTemperature,
+	}
+
+	marshaledPipesTemperature, err := json.Marshal(pipesTemperature)
+	if err != nil {
+		log.Printf("Failed to marshal pipes temperature: %v", err)
 		return
 	}
 
-	value := calculatePipePressure(temperature)
+	token := client.Publish(viper.GetString("mqtt_publish_pipes_temperature"), 0, false, marshaledPipesTemperature)
+	token.Wait()
+	if token.Error() != nil {
+		log.Printf("Failed to publish message: %v", token.Error())
+	}
 
-	// Create a Pressure struct and set the value
+	value := calculatePipePressure(pipesTemperature)
+
 	pressure := common.MqttTargetPipesPressure{
 		Value: value,
 	}
 
-	// Marshal the Pressure struct into a JSON object
 	marshaledPressure, err := json.Marshal(pressure)
 	if err != nil {
 		log.Printf("Failed to marshal pressure: %v", err)
@@ -75,15 +89,22 @@ func onTemperatureChange(client mqtt.Client, msg mqtt.Message) {
 	}
 
 	log.Printf("Publishing new pressure value for pipes: %v", pressure)
-	// Publish the marshaled JSON object to the output topic
-	token := client.Publish(viper.GetString("mqtt_pressure_topic"), 0, false, marshaledPressure)
+	token = client.Publish(viper.GetString("mqtt_publish_pressure_topic"), 0, false, marshaledPressure)
 	token.Wait()
 	if token.Error() != nil {
 		log.Printf("Failed to publish message: %v", token.Error())
 	}
 }
 
-// 21.5 -
+func calculatePipesTemperature(airTemperature common.MqttTargetAirTemperature) (float32, float32) {
+	inTemperature := -2.2376321*airTemperature.Outside + 70.973784
+	outTemperature := -0.79513742*airTemperature.Outside + 41.788372
+	if inTemperature >= outTemperature {
+		return 0, 0
+	}
+	return inTemperature, outTemperature
+}
+
 func calculatePipePressure(temperature common.MqttTargetPipesTemperature) float32 {
 	return 1.1 * DesignCapacity * (temperature.OutTemperature - temperature.InTemperature) * SpecificHeatOfWater
 }

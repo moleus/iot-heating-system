@@ -13,7 +13,7 @@ import (
 
 func init() {
 	pflag.String("mqtt_broker", "tcp://mosquitto:1883", "MQTT broker to connect to")
-	pflag.String("mqtt_temperature_topic", "target/air_temperature", "Air temperature writing topic")
+	pflag.String("mqtt_temperature_topic", common.AirTemperatureTopic, "Air temperature writing topic")
 	pflag.Duration("change_interval", 5*time.Second, "How frequently to change the temperature")
 	pflag.Float32("home_temperature", 21, "Temperature at home")
 

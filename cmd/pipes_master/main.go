@@ -9,6 +9,12 @@ import (
 	"log"
 )
 
+// DesignCapacity - МВт
+const DesignCapacity = 21.5
+
+// SpecificHeatOfWater - Дж/(кг * C)
+const SpecificHeatOfWater = 4190
+
 func init() {
 	pflag.String("mqtt_broker", "tcp://mosquitto:1883", "MQTT broker to connect to")
 	pflag.String("mqtt_temperature_topic", "target/pipes/temperature", "Pipes temperature reading topic")
@@ -77,6 +83,7 @@ func onTemperatureChange(client mqtt.Client, msg mqtt.Message) {
 	}
 }
 
+// 21.5 -
 func calculatePipePressure(temperature common.MqttTargetPipesTemperature) float32 {
-	return (temperature.OutTemperature - temperature.InTemperature) * 10
+	return 1.1 * DesignCapacity * (temperature.OutTemperature - temperature.InTemperature) * SpecificHeatOfWater
 }

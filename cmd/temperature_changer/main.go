@@ -64,6 +64,6 @@ func main() {
 
 func generateTemperature(i int) float32 {
 	// Convert i to radians and get the sine of it
-	// Multiply by 10 to get a range from -10 to 10
-	return 10 * float32(math.Sin(float64(i)/10.0))
+	// Multiply by 10 to get a range from 5 to 25
+	return 10*float32(math.Sin(float64(i)/10.0)) + 15
 }

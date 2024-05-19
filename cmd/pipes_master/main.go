@@ -97,8 +97,8 @@ func onTemperatureChange(client mqtt.Client, msg mqtt.Message) {
 }
 
 func calculatePipesTemperature(airTemperature common.MqttTargetAirTemperature) (float32, float32) {
-	inTemperature := -2.2376321*airTemperature.Outside + 70.973784
-	outTemperature := -0.79513742*airTemperature.Outside + 41.788372
+	inTemperature := -0.79513742*airTemperature.Outside + 41.788372
+	outTemperature := -2.2376321*airTemperature.Outside + 70.973784
 	if inTemperature >= outTemperature {
 		return 0, 0
 	}

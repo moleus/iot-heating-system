@@ -49,3 +49,5 @@ jobs:
           ./cmd/weather_fetcher
           ./cmd/pipes_master
           ./cmd/temperature_changer
+          ./cmd/fuel_analyzer
+          ./cmd/heater

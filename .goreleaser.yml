@@ -24,6 +24,20 @@ builds:
       - linux
     goarch:
       - amd64
+  - id: fuel_analyzer
+    binary: fuel_analyzer
+    main: ./cmd/fuel_analyzer
+    goos:
+      - linux
+    goarch:
+      - amd64
+  - id: heater
+    binary: heater
+    main: ./cmd/heater
+    goos:
+      - linux
+    goarch:
+      - amd64
 
 kos:
   - id: weather_fetcher
@@ -51,6 +65,28 @@ kos:
   - id: pipes_master
     repository: ghcr.io/moleus/iot-heating-system
     main: ./cmd/pipes_master
+    tags:
+      - '{{.Version}}'
+      - latest
+    base_import_paths: true
+    bare: false
+    preserve_import_paths: false
+    platforms:
+      - "linux/amd64"
+  - id: fuel_analyzer
+    repository: ghcr.io/moleus/iot-heating-system
+    main: ./cmd/fuel_analyzer
+    tags:
+      - '{{.Version}}'
+      - latest
+    base_import_paths: true
+    bare: false
+    preserve_import_paths: false
+    platforms:
+      - "linux/amd64"
+  - id: heater
+    repository: ghcr.io/moleus/iot-heating-system
+    main: ./cmd/heater
     tags:
       - '{{.Version}}'
       - latest

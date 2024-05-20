@@ -14,8 +14,13 @@ type MqttTargetAirTemperature struct {
 	AtHome  float32 `json:"at_home"`
 }
 
+type MqttTargetFuelExpenses struct {
+	Value float32 `json:"value"`
+}
+
 const (
 	AirTemperatureTopic   = "target/air_temperature"
 	PipesTemperatureTopic = "target/pipes/temperature"
 	PipesPressureTopic    = "target/pipes/pressure"
+	FuelExpensesTopic     = "target/fuel_expenses"
 )

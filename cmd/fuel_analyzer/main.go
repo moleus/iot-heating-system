@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"iot-heating-system/cmd/fuel_analyzer/api"
 	"log"
 	"net/http"
 
@@ -12,7 +13,7 @@ import (
 type Server struct{}
 
 // GetAnalyze - реализация метода для анализа расхода топлива.
-func (s *Server) GetAnalyze(c *gin.Context, params GetAnalyzeParams) {
+func (s *Server) GetAnalyze(c *gin.Context, params api.GetAnalyzeParams) {
 	requiredTemp := params.RequiredTemp
 	outsideTemp := params.OutsideTemp
 	specificHeat := params.SpecificHeatOfCombustionFuel
@@ -23,7 +24,7 @@ func (s *Server) GetAnalyze(c *gin.Context, params GetAnalyzeParams) {
 	analyzer := NewFuelConsumptionAnalyzer(requiredTemp, outsideTemp, designOutsideTemp, designCapacity, specificHeat, efficiency)
 	analyzer.Analyze()
 
-	response := GetAnalyze200JSONResponse{
+	response := api.GetAnalyze200JSONResponse{
 		FuelConsumption: &analyzer.FuelConsumption,
 	}
 
@@ -35,7 +36,7 @@ func main() {
 
 	si := &Server{}
 
-	RegisterHandlers(r, si)
+	api.RegisterHandlers(r, si)
 
 	fmt.Println("Starting server at :8080")
 	if err := r.Run(":8080"); err != nil {

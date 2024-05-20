@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/viper"
 	"iot-heating-system/pkg/common"
 	"log"
-	"math/rand/v2"
+	"math"
 	"time"
 )
 
@@ -34,13 +34,15 @@ func main() {
 	}
 
 	// Start the infinite loop
+	i := 0
 	for {
 		// Sleep for the specified interval
 		time.Sleep(viper.GetDuration("change_interval"))
 
+		i++
 		// Generate random temperatures
 		temperature := common.MqttTargetAirTemperature{
-			Outside: rand.Float32()*5 + 10, // Random temperature between 10 and 15
+			Outside: generateTemperature(i), // Random temperature between 10 and 15
 			AtHome:  float32(viper.GetFloat64("home_temperature")),
 		}
 
@@ -58,4 +60,10 @@ func main() {
 			log.Printf("Failed to publish message: %v", token.Error())
 		}
 	}
+}
+
+func generateTemperature(i int) float32 {
+	// Convert i to radians and get the sine of it
+	// Multiply by 10 to get a range from 5 to 25
+	return 10*float32(math.Sin(float64(i)/10.0)) + 15
 }

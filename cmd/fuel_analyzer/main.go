@@ -41,19 +41,11 @@ func (s *Server) GetAnalyze(c *gin.Context, params api.GetAnalyzeParams) {
 	designCapacity := params.DesignCapacity
 	efficiency := params.Efficiency
 
-	var response api.GetAnalyze200JSONResponse
-	if outsideTemp > 15 {
-		zero := float32(0.0)
-		response = api.GetAnalyze200JSONResponse{
-			FuelConsumption: &zero,
-		}
-	} else {
-		analyzer := NewFuelConsumptionAnalyzer(requiredTemp, outsideTemp, designOutsideTemp, designCapacity, specificHeat, efficiency)
-		analyzer.Analyze()
+	analyzer := NewFuelConsumptionAnalyzer(requiredTemp, outsideTemp, designOutsideTemp, designCapacity, specificHeat, efficiency)
+	analyzer.Analyze()
 
-		response = api.GetAnalyze200JSONResponse{
-			FuelConsumption: &analyzer.FuelConsumption,
-		}
+	response := api.GetAnalyze200JSONResponse{
+		FuelConsumption: &analyzer.FuelConsumption,
 	}
 
 	c.JSON(http.StatusOK, response)

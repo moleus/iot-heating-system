@@ -40,7 +40,7 @@ func main() {
 
 		// Generate random temperatures
 		temperature := common.MqttTargetAirTemperature{
-			Outside: -rand.Float32()*10 + 5, // Random temperature between -10 and -5
+			Outside: -rand.Float32()*10 - 5, // Random temperature between -15 and -5
 			AtHome:  float32(viper.GetFloat64("home_temperature")),
 		}
 

@@ -25,6 +25,7 @@ type HourForecast struct {
 
 type MqttTargetFuelExpensesPredictions struct {
 	Values []float32 `json:"values"`
+	Time   []string  `json:"time,omitempty"`
 }
 
 const (

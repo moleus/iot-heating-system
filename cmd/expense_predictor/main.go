@@ -98,7 +98,7 @@ func onTemperatureChange(client mqtt.Client, msg mqtt.Message) {
 			return
 		}
 		fuelExpensesPrediction.Values = append(fuelExpensesPrediction.Values, *fuelConsumptionResponse.FuelConsumption)
-
+		fuelExpensesPrediction.Time = append(fuelExpensesPrediction.Time, forecast.Time)
 	}
 
 	marshaledFuelExpensesPrediction, err := json.Marshal(fuelExpensesPrediction)

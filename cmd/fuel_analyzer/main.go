@@ -12,8 +12,28 @@ import (
 // Server - структура для реализации интерфейса ServerInterface.
 type Server struct{}
 
+func (s *Server) validateParams(params api.GetAnalyzeParams) (bool, string) {
+	if params.DesignCapacity <= 0 {
+		return false, "designCapacity must be positive"
+	}
+	if params.Efficiency < 0.01 || params.Efficiency > 1 {
+		return false, "efficiency must be between 0.01 and 1"
+	}
+	if params.DesignOutsideTemp > 0 || params.DesignOutsideTemp < -50 {
+		return false, "designOutsideTemp must be between 0 and -50"
+	}
+	if params.SpecificHeatOfCombustionFuel <= 0 {
+		return false, "specificHeat must be greater than 0"
+	}
+	return true, ""
+}
+
 // GetAnalyze - реализация метода для анализа расхода топлива.
 func (s *Server) GetAnalyze(c *gin.Context, params api.GetAnalyzeParams) {
+	if valid, errMsg := s.validateParams(params); !valid {
+		c.JSON(http.StatusBadRequest, gin.H{"error": errMsg})
+		return
+	}
 	requiredTemp := params.RequiredTemp
 	outsideTemp := params.OutsideTemp
 	specificHeat := params.SpecificHeatOfCombustionFuel
@@ -21,11 +41,19 @@ func (s *Server) GetAnalyze(c *gin.Context, params api.GetAnalyzeParams) {
 	designCapacity := params.DesignCapacity
 	efficiency := params.Efficiency
 
-	analyzer := NewFuelConsumptionAnalyzer(requiredTemp, outsideTemp, designOutsideTemp, designCapacity, specificHeat, efficiency)
-	analyzer.Analyze()
+	var response api.GetAnalyze200JSONResponse
+	if outsideTemp > 15 {
+		zero := float32(0.0)
+		response = api.GetAnalyze200JSONResponse{
+			FuelConsumption: &zero,
+		}
+	} else {
+		analyzer := NewFuelConsumptionAnalyzer(requiredTemp, outsideTemp, designOutsideTemp, designCapacity, specificHeat, efficiency)
+		analyzer.Analyze()
 
-	response := api.GetAnalyze200JSONResponse{
-		FuelConsumption: &analyzer.FuelConsumption,
+		response = api.GetAnalyze200JSONResponse{
+			FuelConsumption: &analyzer.FuelConsumption,
+		}
 	}
 
 	c.JSON(http.StatusOK, response)

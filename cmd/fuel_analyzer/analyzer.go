@@ -1,5 +1,9 @@
 package main
 
+import (
+	"iot-heating-system/pkg/common"
+)
+
 // FuelConsumptionAnalyzer - агент анализатор расходов топлива
 type FuelConsumptionAnalyzer struct {
 	RequiredTemp                 float32
@@ -27,7 +31,7 @@ func (a *FuelConsumptionAnalyzer) CalculateHeatConsumption() float32 {
 	// Формула: Qов = Q`ов * (tвр - tср.от)/(tвр - tнр) * 60 * 60
 	// где Q`ов - расход тепла на отопление, tвр - температура внутри помещения, tср.от - средняя температура наружного воздуха за час,
 	// tнр - расчетная температура наружного воздуха для проектирования систем отопления
-	if a.OutsideTemp > 15 {
+	if a.OutsideTemp > common.OutsideTemperatureToDisableSystem {
 		return 0
 	}
 	temperatureDifference := a.RequiredTemp - a.OutsideTemp

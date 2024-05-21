@@ -1,4 +1,10 @@
-# Install
+# IoT Project - autonomous heating system
+
+## Architecture
+
+![architecture image](./imgs/architectre.svg)
+
+## Install
 ```bash
 pip install pre-commit
 pre-commit install
@@ -9,15 +15,13 @@ go install
 go mod tidy
 ```
 
-# dev
-generate openapi schema
+## Development
+generate OpenAPI schema
 ```bash
 go generate ./...
 ```
 
-# TODO
-- github CI
-- golangcilint
-- .pre-commit-config
-- OpenAPI schema
-- Dockerfile/docker-compose
+run all services
+```bash
+docker-compose up
+```

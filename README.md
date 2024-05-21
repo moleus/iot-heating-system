@@ -2,7 +2,7 @@
 
 ## Architecture
 
-![architecture image](./imgs/architectre.svg)
+![architecture image](./imgs/architecture.svg)
 
 ## Install
 ```bash

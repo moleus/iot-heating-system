@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"iot-heating-system/cmd/fuel_analyzer/api"
+	api "iot-heating-system/cmd/fuel_analyzer/api"
 	"log"
 	"net/http"
 
@@ -45,7 +45,7 @@ func (s *Server) GetAnalyze(c *gin.Context, params api.GetAnalyzeParams) {
 	analyzer.Analyze()
 
 	response := api.GetAnalyze200JSONResponse{
-		FuelConsumption: &analyzer.FuelConsumption,
+		FuelConsumption: analyzer.FuelConsumption,
 	}
 
 	c.JSON(http.StatusOK, response)

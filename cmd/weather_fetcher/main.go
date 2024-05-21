@@ -65,7 +65,7 @@ func backgroundWeatherFetcher(server *WeatherFetcher) {
 			log.Fatalf("Failed to request weather: %v", err)
 		}
 
-		marshaledWeather, err := json.Marshal(weather)
+		marshaledWeather, err := json.Marshal(weather.Data.WeatherByPoint.Forecast.Days)
 		if err != nil {
 			log.Fatalf("Failed to marshal weather: %v", err)
 		}

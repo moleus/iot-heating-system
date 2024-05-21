@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,10 @@ import (
 	"math/rand/v2"
 	"time"
 )
+
+const fetchIntervalSecs = 30
+
+var _ = generateRandomWeather()
 
 func init() {
 	pflag.String("mqtt_broker", "tcp://mosquitto:1883", "MQTT broker to connect to")
@@ -32,7 +37,7 @@ func main() {
 
 	weatherfetcher.RegisterHandlers(router, strictHandler)
 
-	go backgroundWeatherFetcher()
+	go backgroundWeatherFetcher(server)
 
 	// Start serving traffic
 	if err := router.Run(":8080"); err != nil {
@@ -41,15 +46,25 @@ func main() {
 }
 
 // runs infinite loop and generates random weather data every 5 seconds and pushes them to mqtt
-func backgroundWeatherFetcher() {
+func backgroundWeatherFetcher(server *WeatherFetcher) {
 	mqttClient := mqtt.NewClient(mqtt.NewClientOptions().AddBroker(viper.GetString("mqtt_broker")))
 	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
 		log.Fatalf("Failed to connect to mqtt broker: %v", token.Error())
 	}
 
 	for {
-		time.Sleep(5 * time.Second)
-		weather := generateRandomWeather()
+		time.Sleep(fetchIntervalSecs * time.Second)
+		//43.139873051972195, 131.92746165215814 - Vladivostok
+		params := weatherfetcher.GetWeatherParams{
+			Lat:  43.139873051972195,
+			Lon:  131.92746165215814,
+			Days: 1,
+		}
+		weather, err := server.requestWeather(context.Background(), params)
+		if err != nil {
+			log.Fatalf("Failed to request weather: %v", err)
+		}
+
 		marshaledWeather, err := json.Marshal(weather)
 		if err != nil {
 			log.Fatalf("Failed to marshal weather: %v", err)

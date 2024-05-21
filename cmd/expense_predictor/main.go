@@ -43,7 +43,7 @@ func main() {
 		log.Fatalf("Failed to connect to mqtt broker: %v", token.Error())
 	}
 
-	token = mqttClient.Subscribe(viper.GetString("mqtt_subscribe_temperature_topic"), 0, onTemperatureChange)
+	token = mqttClient.Subscribe(viper.GetString("mqtt_subscribe_prediction_temperature_topic"), 0, onTemperatureChange)
 	token.Wait()
 	if token.Error() != nil {
 		log.Fatalf("Failed to subscribe to topic: %v", token.Error())

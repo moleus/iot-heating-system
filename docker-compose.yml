@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
   weather-fetcher:
     image: ghcr.io/moleus/iot-heating-system/weather_fetcher:latest
@@ -33,7 +31,7 @@ services:
       - iot-heating-system
 
   expense-predictor:
-    image: ghcr.io/moleus/iot-heating-system/expense-predictor:latest
+    image: ghcr.io/moleus/iot-heating-system/expense_predictor:latest
     networks:
       - iot-heating-system
 

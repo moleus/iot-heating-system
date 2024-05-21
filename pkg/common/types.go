@@ -21,8 +21,8 @@ type MqttTargetFuelExpenses struct {
 }
 
 type MqttTargetFuelExpensesPredictions struct {
-	FuelConsumption float32    `json:"consumption,omitempty"`
-	Time            *time.Time `json:"time,omitempty"`
+	FuelConsumption float32   `json:"consumption,omitempty"`
+	Time            time.Time `json:"time,omitempty"`
 }
 
 const (

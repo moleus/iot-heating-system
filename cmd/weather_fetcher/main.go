@@ -65,7 +65,10 @@ func backgroundWeatherFetcher(server *WeatherFetcher) {
 			log.Fatalf("Failed to request weather: %v", err)
 		}
 
-		marshaledWeather, err := json.Marshal(weather.Data.WeatherByPoint.Forecast.Days)
+		hours := weather.Data.WeatherByPoint.Forecast.Days[0].Hours
+
+		log.Printf("Fetched weather: %v", hours)
+		marshaledWeather, err := json.Marshal(hours)
 		if err != nil {
 			log.Fatalf("Failed to marshal weather: %v", err)
 		}
@@ -85,8 +88,8 @@ func generateRandomWeather() []weatherfetcher.HourForecast {
 		temp := rand.Float32() * 14 // Random temperature between 0 and 14
 		forecastTime := now.Add(time.Duration(i) * time.Hour)
 		forecasts = append(forecasts, weatherfetcher.HourForecast{
-			Temperature: &temp,
-			Time:        &forecastTime,
+			Temperature: temp,
+			Time:        forecastTime,
 		})
 	}
 

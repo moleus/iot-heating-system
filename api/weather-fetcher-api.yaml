@@ -52,6 +52,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DayForecast'
+      required:
+        - days
     DayForecast:
       type: object
       properties:
@@ -59,6 +61,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/HourForecast'
+      required:
+        - hours
     HourForecast:
       type: object
       properties:
@@ -67,3 +71,6 @@ components:
           format: date-time
         temperature:
           type: number
+      required:
+        - time
+        - temperature

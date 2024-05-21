@@ -17,18 +17,18 @@ import (
 
 // DayForecast defines model for DayForecast.
 type DayForecast struct {
-	Hours *[]HourForecast `json:"hours,omitempty"`
+	Hours []HourForecast `json:"hours"`
 }
 
 // DaysForecast defines model for DaysForecast.
 type DaysForecast struct {
-	Days *[]DayForecast `json:"days,omitempty"`
+	Days []DayForecast `json:"days"`
 }
 
 // HourForecast defines model for HourForecast.
 type HourForecast struct {
-	Temperature *float32   `json:"temperature,omitempty"`
-	Time        *time.Time `json:"time,omitempty"`
+	Temperature float32   `json:"temperature"`
+	Time        time.Time `json:"time"`
 }
 
 // GetWeatherParams defines parameters for GetWeather.

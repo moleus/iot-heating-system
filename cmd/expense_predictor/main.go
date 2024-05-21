@@ -24,8 +24,8 @@ const (
 
 func init() {
 	pflag.String("mqtt_broker", "tcp://mosquitto:1883", "MQTT broker to connect to")
-	pflag.String("mqtt_subscribe_prediction_temperature_topic", "predictions/weather", "Prediction temperature reading topic")
-	pflag.String("mqtt_publish_fuel_expenses_prediction_topic", "predictions/fuel_expenses", "Fuel expenses prediction writing topic")
+	pflag.String("mqtt_subscribe_prediction_temperature_topic", common.WeatherPredictionsTopic, "Prediction temperature reading topic")
+	pflag.String("mqtt_publish_fuel_expenses_prediction_topic", common.FuelExpensesPredictionTopic, "Fuel expenses prediction writing topic")
 	pflag.String("fuel_analyzer_url", "http://fuel-analyzer:8080/analyze", "Fuel analyzer URL to send GET request to")
 
 	pflag.Parse()
@@ -97,8 +97,13 @@ func onTemperatureChange(client mqtt.Client, msg mqtt.Message) {
 			log.Printf("Failed to unmarshal response body: %v", err)
 			return
 		}
-		fuelExpensesPrediction.Values = append(fuelExpensesPrediction.Values, *fuelConsumptionResponse.FuelConsumption)
-		fuelExpensesPrediction.Time = append(fuelExpensesPrediction.Time, forecast.Time)
+
+		fuelExpensePrediction := common.HourForecast{
+			Temperature: *fuelConsumptionResponse.FuelConsumption,
+			Time:        forecast.Time,
+		}
+
+		fuelExpensesPrediction.Forecast = append(fuelExpensesPrediction.Forecast, fuelExpensePrediction)
 	}
 
 	marshaledFuelExpensesPrediction, err := json.Marshal(fuelExpensesPrediction)

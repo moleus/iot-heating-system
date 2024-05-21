@@ -24,13 +24,14 @@ type HourForecast struct {
 }
 
 type MqttTargetFuelExpensesPredictions struct {
-	Values []float32 `json:"values"`
-	Time   []string  `json:"time,omitempty"`
+	Forecast []HourForecast `json:"forecast,omitempty"`
 }
 
 const (
-	AirTemperatureTopic   = "target/air_temperature"
-	PipesTemperatureTopic = "target/pipes/temperature"
-	PipesPressureTopic    = "target/pipes/pressure"
-	FuelExpensesTopic     = "target/fuel_expenses"
+	AirTemperatureTopic         = "target/air_temperature"
+	PipesTemperatureTopic       = "target/pipes/temperature"
+	PipesPressureTopic          = "target/pipes/pressure"
+	FuelExpensesTopic           = "target/fuel_expenses"
+	WeatherPredictionsTopic     = "predictions/weather"
+	FuelExpensesPredictionTopic = "predictions/fuel_expenses"
 )

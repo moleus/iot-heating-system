@@ -73,7 +73,7 @@ func onTemperatureChange(client mqtt.Client, msg mqtt.Message) {
 	for _, forecast := range hourForecast {
 		q := u.Query()
 		q.Set("required_temp", fmt.Sprintf("%d", RequiredTemp))
-		q.Set("outside_temp", fmt.Sprintf("%d", forecast.Temperature))
+		q.Set("outside_temp", fmt.Sprintf("%f", *forecast.Temperature))
 		q.Set("efficiency", fmt.Sprintf("%f", Efficiency))
 		q.Set("specific_heat_of_combustion_fuel", fmt.Sprintf("%d", SpecificHeatOfCombustionFuel))
 		q.Set("design_outside_temp", fmt.Sprintf("%d", DesignOutsideTemp))

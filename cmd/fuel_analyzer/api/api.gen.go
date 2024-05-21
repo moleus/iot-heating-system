@@ -187,7 +187,7 @@ type GetAnalyzeResponseObject interface {
 }
 
 type GetAnalyze200JSONResponse struct {
-	FuelConsumption *float32 `json:"fuel_consumption,omitempty"`
+	FuelConsumption float32 `json:"fuel_consumption"`
 }
 
 func (response GetAnalyze200JSONResponse) VisitGetAnalyzeResponse(w http.ResponseWriter) error {

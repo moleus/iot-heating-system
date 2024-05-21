@@ -97,7 +97,7 @@ func onTemperatureChange(client mqtt.Client, msg mqtt.Message) {
 	}
 
 	fuelExpenses := common.MqttTargetFuelExpenses{
-		Value: *fuelConsumptionResponse.FuelConsumption,
+		Value: fuelConsumptionResponse.FuelConsumption,
 	}
 
 	marshaledFuelExpenses, err := json.Marshal(fuelExpenses)

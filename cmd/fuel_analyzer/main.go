@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"iot-heating-system/cmd/fuel_analyzer/api"
+	api "iot-heating-system/cmd/fuel_analyzer/api"
 	"log"
 	"net/http"
 

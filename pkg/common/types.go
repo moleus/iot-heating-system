@@ -1,5 +1,7 @@
 package common
 
+import "time"
+
 type MqttTargetPipesTemperature struct {
 	InTemperature  float32 `json:"in_temperature"`
 	OutTemperature float32 `json:"out_temperature"`
@@ -18,13 +20,9 @@ type MqttTargetFuelExpenses struct {
 	Value float32 `json:"value"`
 }
 
-type HourForecast struct {
-	Temperature float32 `json:"temperature,omitempty"`
-	Time        string  `json:"time,omitempty"`
-}
-
 type MqttTargetFuelExpensesPredictions struct {
-	Forecast []HourForecast `json:"forecast,omitempty"`
+	FuelConsumption float32    `json:"temperature,omitempty"`
+	Time            *time.Time `json:"time,omitempty"`
 }
 
 const (

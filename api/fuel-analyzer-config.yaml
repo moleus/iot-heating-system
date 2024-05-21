@@ -3,6 +3,6 @@ generate:
   gin-server: true
   strict-server: true
   models: true
-output: ../cmd/fuel_analyzer/api.gen.go
+output: ../cmd/fuel_analyzer/api/api.gen.go
 output-options:
   skip-prune: true

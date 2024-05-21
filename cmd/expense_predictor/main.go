@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"io"
 	fuelanalyzer "iot-heating-system/cmd/fuel_analyzer/api"
+	weather_fetcher "iot-heating-system/cmd/weather_fetcher/api"
 	"iot-heating-system/pkg/common"
 	"log"
 	"net/http"
@@ -53,7 +54,7 @@ func main() {
 }
 
 func onTemperatureChange(client mqtt.Client, msg mqtt.Message) {
-	var hourForecast []common.HourForecast
+	var hourForecast []weather_fetcher.HourForecast
 
 	err := json.Unmarshal(msg.Payload(), &hourForecast)
 	if err != nil {
@@ -67,7 +68,7 @@ func onTemperatureChange(client mqtt.Client, msg mqtt.Message) {
 		return
 	}
 
-	var fuelExpensesPrediction common.MqttTargetFuelExpensesPredictions
+	var dayPredictions []common.MqttTargetFuelExpensesPredictions
 
 	for _, forecast := range hourForecast {
 		q := u.Query()
@@ -98,15 +99,15 @@ func onTemperatureChange(client mqtt.Client, msg mqtt.Message) {
 			return
 		}
 
-		fuelExpensePrediction := common.HourForecast{
-			Temperature: *fuelConsumptionResponse.FuelConsumption,
-			Time:        forecast.Time,
+		hourPrediction := common.MqttTargetFuelExpensesPredictions{
+			FuelConsumption: *fuelConsumptionResponse.FuelConsumption,
+			Time:            forecast.Time,
 		}
 
-		fuelExpensesPrediction.Forecast = append(fuelExpensesPrediction.Forecast, fuelExpensePrediction)
+		dayPredictions = append(dayPredictions, hourPrediction)
 	}
 
-	marshaledFuelExpensesPrediction, err := json.Marshal(fuelExpensesPrediction)
+	marshaledFuelExpensesPrediction, err := json.Marshal(dayPredictions)
 	if err != nil {
 		log.Printf("Failed to marshal fuel expenses: %v", err)
 		return

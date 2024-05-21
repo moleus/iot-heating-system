@@ -6,6 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	weatherfetcher "iot-heating-system/cmd/weather_fetcher/api"
+	"iot-heating-system/pkg/common"
 	"log"
 	"math/rand/v2"
 	"time"
@@ -13,7 +15,7 @@ import (
 
 func init() {
 	pflag.String("mqtt_broker", "tcp://mosquitto:1883", "MQTT broker to connect to")
-	pflag.String("mqtt_topic", "predictions/weather", "MQTT topic to write to")
+	pflag.String("mqtt_topic", common.WeatherPredictionsTopic, "MQTT topic to write to")
 	pflag.String("weather_api_url", "https://api.weather.yandex.ru/graphql/query", "Url to fetch weather from")
 	pflag.String("api_key", "", "API key used for authentication")
 
@@ -26,9 +28,9 @@ func main() {
 	router := gin.Default()
 
 	server := NewWeatherFetcher(viper.GetString("weather_api_url"), viper.GetString("api_key"))
-	strictHandler := NewStrictHandler(server, nil)
+	strictHandler := weatherfetcher.NewStrictHandler(server, nil)
 
-	RegisterHandlers(router, strictHandler)
+	weatherfetcher.RegisterHandlers(router, strictHandler)
 
 	go backgroundWeatherFetcher()
 
@@ -58,8 +60,8 @@ func backgroundWeatherFetcher() {
 	}
 }
 
-func generateRandomWeather() []HourForecast {
-	var forecasts []HourForecast
+func generateRandomWeather() []weatherfetcher.HourForecast {
+	var forecasts []weatherfetcher.HourForecast
 
 	// Get the current time and truncate to the start of the next day
 	now := time.Now().Truncate(24 * time.Hour).Add(24 * time.Hour)
@@ -67,7 +69,7 @@ func generateRandomWeather() []HourForecast {
 	for i := 0; i < 24; i++ {
 		temp := rand.Float32() * 14 // Random temperature between 0 and 14
 		forecastTime := now.Add(time.Duration(i) * time.Hour)
-		forecasts = append(forecasts, HourForecast{
+		forecasts = append(forecasts, weatherfetcher.HourForecast{
 			Temperature: &temp,
 			Time:        &forecastTime,
 		})

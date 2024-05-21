@@ -32,6 +32,11 @@ services:
     networks:
       - iot-heating-system
 
+  expense-predictor:
+    image: ghcr.io/moleus/iot-heating-system/expense-predictor:latest
+    networks:
+      - iot-heating-system
+
   victoriametrics:
     image: victoriametrics/victoria-metrics:v1.100.1
     ports:

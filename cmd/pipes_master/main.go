@@ -106,5 +106,8 @@ func calculatePipesTemperature(airTemperature common.MqttTargetAirTemperature) (
 }
 
 func calculatePipePressure(temperature common.MqttTargetPipesTemperature) float32 {
+	if temperature.InTemperature == 0 && temperature.OutTemperature == 0 {
+		return 0
+	}
 	return 1.1 * DesignCapacity * float32(1000) / ((temperature.OutTemperature - temperature.InTemperature) * SpecificHeatOfWater)
 }
